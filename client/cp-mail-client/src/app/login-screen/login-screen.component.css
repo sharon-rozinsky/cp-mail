@@ -1,0 +1,13 @@
+.pure-form {
+    padding: 200px 0;
+    width:500px; 
+    margin:0 auto;
+}
+
+img.welcome{
+    padding: 20px 0;
+    position: absolute;
+    left: 45%;
+    max-width: 100%;
+    height: auto;
+}

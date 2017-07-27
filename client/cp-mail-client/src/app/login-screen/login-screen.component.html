@@ -1,0 +1,13 @@
+<img class="welcome" src="/assets/welcome_icon.png" alt="CP-MAIL">
+
+<div id="list" class="pure-u-1">
+  <form class="pure-form" (ngSubmit)="onSubmit(email.value)">     
+      <fieldset>
+          <legend>Enter Email Address</legend>
+
+          <input name="emailAddress" type="email" placeholder="Email" #email>
+
+          <button type="submit" class="pure-button pure-button-primary">Sign in</button>          
+      </fieldset>
+  </form>
+</div>
