@@ -1,74 +1,69 @@
-<div id="layout" class="content pure-g">
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand">{{ currentUserAddress }}</a>
+        </div>
 
-    <div id="nav" class="pure-u">
-        <a href="#" class="nav-menu-button">Menu</a>
-
-        <div class="nav-inner">
-            <ul class="pure-menu-list">
-              <li class="pure-menu-heading">{{ currentUserAddress }}</li>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <li>
+                    <a>
+                        <span class="glyphicon glyphicon-inbox"></span>
+                        <span class="badge badge-pill badge-success">{{ unReadEmailCount }}</span>                        
+                    </a>
+                </li>
+                <li>
+                    <button *ngIf="selectedEmail" (click)='markCurrentUnread()' type="button" class="btn btn-info glyphicon glyphicon-envelope"
+                        data-placement="buttom" title="Mark Unread">
+                    </button>
+                </li>
             </ul>
-            <button class="primary-button pure-button">Compose</button>
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
 
-            <div class="pure-menu">
-                <ul class="pure-menu-list">
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link">Inbox <span class="email-count">(2)</span></a></li>                    
-                    <li class="pure-menu-item"><a href="#" class="pure-menu-link"><span class="email-label-personal"></span>some tag</a></li>                    
-                </ul>
-            </div>
+<div class="main-container">
+    <div class="mail-descriptions-container">
+        <div class="list-group">
+            <a *ngFor="let md of emailDescriptions" [ngClass]="{'email-item-unread': !md.isRead}" [class.active]="md.isSelected" (click)='clicked(md)'
+                class="mail-description-box list-group-item list-group-item-action">
+                <h4 class="list-group-item-heading">{{ md.sender }}</h4>
+                <p class="list-group-item-text">{{ md.subject }}</p>
+                <p class="list-group-item-text">{{ md.description }}</p>
+            </a>            
         </div>
     </div>
 
-    <div id="list" class="pure-u-1">
-        <div 
-            *ngFor="let md of emailDescriptions" 
-            class="email-item pure-g" 
-            [ngClass]="{'email-item-unread': !md.isRead}"
-            (click)='clicked(md)'
-            [class.email-item-selected]="md.isSelected">
-            <!--<div class="pure-u">
-                <img width="64" height="64" alt="{{ md.sender }} s avatar" class="email-avatar" src="{{md.avatarUrl}}">
-            </div>-->
+    <div class="separator-container">
+    </div>
 
-            <div class="pure-u-3-4">
-                <h5 class="email-name">{{ md.sender }}</h5>
-                <h4 class="email-subject">{{ md.subject }}</h4>
-                <p class="email-desc">
-                    {{ md.description }}
+    <div class="mail-viewer-container">
+        <div *ngIf="selectedEmail" class="email-content-header-container">
+            <div class="email-content-header">
+                <h1 class="email-content-title">{{ selectedEmail.subject }}</h1>
+                <br>
+                <p class="email-content-subtitle">
+                    From: <a>{{ selectedEmail.sender }}</a>
+                </p>
+                <p class="email-content-subtitle">
+                    To: <a>{{ selectedEmail.recepients }}</a>
+                </p>
+                <p>
+                    at <span>{{ selectedEmail.dateReceived }}</span>
                 </p>
             </div>
         </div>
-    </div>
 
-    <div *ngIf="selectedEmail" id="main" class="pure-u-1">
-        <div class="email-content">
-            <div class="email-content-header pure-g">
-                <div class="pure-u-1-2">
-                    <h1 class="email-content-title">{{ selectedEmail.subject }}</h1>
-                    <br>
-                    <p class="email-content-subtitle">
-                        From: <a>{{ selectedEmail.sender }}</a>
-                    </p>                                 
-                    <p class="email-content-subtitle">
-                        To: <a>{{ selectedEmail.recepients }}</a>
-                    </p>
-                    <p>
-                        at <span>{{ selectedEmail.dateReceived }}</span>
-                    </p>
-                </div>
-
-                <!--<div class="email-content-controls pure-u-1-2">
-                    <button class="secondary-button pure-button">Reply</button>
-                    <button class="secondary-button pure-button">Forward</button>
-                    <button class="secondary-button pure-button">Move to</button>
-                </div>-->
-            </div>
-
-            <div class="email-content-body">                
-                <div [innerHTML]="selectedEmail.bodyHtml"></div>
-                <!--<p>
-                    {{ selectedEmail.body }}
-                </p>-->
-            </div>
+        <div *ngIf="selectedEmail" class="email-content-body">
+            <div [innerHTML]="selectedEmail.bodyHtml"></div>
         </div>
     </div>
 </div>

@@ -12,12 +12,11 @@ export class MailViewerComponent implements OnInit {
   emailDescriptions: Array<MailContent> = [];
   selectedEmail: MailContent;
   currentUserAddress: string;
+  unReadEmailCount: number = 0;
 
   constructor(private route: ActivatedRoute, private http: Http) {
     route.params.subscribe(params => { this.currentUserAddress = params['email']; });
     console.log('current email: ' + this.currentUserAddress);
-    this.fetchEmails();
-
 
     // mock data
     /*this.mailDescriptions = [
@@ -29,21 +28,41 @@ export class MailViewerComponent implements OnInit {
     ];*/
   }
 
-  fetchEmails(): void {
-    let emails: any[];
+  async initEmails() {
+    let result = await this.fetchEmails()
+      .then((res) => this.emailDescriptions = res)
+      .catch((err) => console.log(err));
+    this.countUnReadEmails();
+  }
 
-    this.http.get('http://sharon.sealdoc.com:3000/' + this.currentUserAddress + '/mail')
-      .subscribe((res: Response) => {
-        emails = res.json();
+  fetchEmails(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        let emails: any[];
 
-        emails.forEach(email => this.emailDescriptions.push(
-          new MailContent(email._id, email.sender, email.subject, email.recepients, email.dateReceived,
-            email.description, email.body, email.bodyHtml, email.isRead, email.isSelected))
-        );
+        this.http.get('http://sharon.sealdoc.com:3000/' + this.currentUserAddress + '/mail')
+          .subscribe((res: Response) => {
+            emails = res.json();
 
-        console.log(emails);
-        console.log('recevied emails for user: ' + this.currentUserAddress + '\n' + emails);
-      });
+            emails.forEach(email => this.emailDescriptions.push(
+              new MailContent(email._id, email.sender, email.subject, email.recepients, email.dateReceived,
+                email.description, email.body, email.bodyHtml, email.isRead, email.isSelected))
+            );
+
+            console.log(emails);
+            console.log('recevied emails for user: ' + this.currentUserAddress + '\n' + emails);
+            resolve(emails);
+          });
+      }, 0)
+    })
+  }
+
+  countUnReadEmails(): void {
+    this.emailDescriptions.forEach(email => {
+      if (!email.isRead) {
+        this.unReadEmailCount++;
+      }
+    })
   }
 
   clicked(mail: MailContent): void {
@@ -56,6 +75,7 @@ export class MailViewerComponent implements OnInit {
     if (!this.selectedEmail.isRead) {
       this.selectedEmail.isRead = true;
       this.updateMailReadStatus(true);
+      this.unReadEmailCount--;
     }
   }
 
@@ -66,10 +86,19 @@ export class MailViewerComponent implements OnInit {
         status: status
       })
       .subscribe((res: Response) => {
-        console.log(res);
+        if (status == false && res.status == 200) {
+          this.selectedEmail.isRead = false;
+          this.unReadEmailCount++;
+        }
       });
   }
 
+  markCurrentUnread(): void {
+    console.log("marking mail with id: " + this.selectedEmail._id + " as unread");
+    this.updateMailReadStatus(false);
+  }
+
   ngOnInit() {
+    this.initEmails();
   }
 }
