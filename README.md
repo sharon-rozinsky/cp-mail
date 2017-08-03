@@ -7,4 +7,7 @@ An open source SMTP server and UI to use in projects who need to send a lot of e
 - Order mail list by date
 - Add hour to date received
 - Implement search
-- bug: when clicking 'mark as unread' on the same mail the counter increases (disable the button)
+- Bug: when clicking 'mark as unread' on the same mail the counter increases (disable the button)
+- Fix constants in client side (port numbers, addresses etc...)
+- Handle server side startup scripts to load mongo for dev environment
+- Create docker image
