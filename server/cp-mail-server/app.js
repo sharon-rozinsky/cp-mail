@@ -5,7 +5,21 @@ const app = express();
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
+var socketio = require('socket.io');
 
+// socket.io init
+var client = socketio.listen(config.socketPort).sockets;
+
+// express init
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(cors());
+require('./app/routes.js')(app);
+app.listen(config.apiPort, function () {
+  console.log('cp-mail server listeninig on port 3000');
+})
+
+// mailin init
 mailin.start({
   port: 25,
   disableWebhook: true // Disable the webhook posting.
@@ -39,12 +53,6 @@ mailin.on('message', function (connection, data, content) {
   }
   console.log(message);
   MongoRepository.addMessage(message);
+  client.emit('new-message', message);
 });
 
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(cors());
-require('./app/routes.js')(app);
-app.listen(config.port, function () {
-  console.log('cp-mail server listeninig on port 3000');
-})

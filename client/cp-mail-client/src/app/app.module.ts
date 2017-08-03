@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import {ToasterModule, ToasterService} from 'angular2-toaster';
 
 import { AppComponent } from './app.component';
 import { MailViewerComponent } from './mail-viewer/mail-viewer.component';
@@ -22,12 +24,14 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes// ,
       // { enableTracing: true } // <-- debugging purposes only
     ),
     FormsModule,
-    HttpModule
+    HttpModule,
+    ToasterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

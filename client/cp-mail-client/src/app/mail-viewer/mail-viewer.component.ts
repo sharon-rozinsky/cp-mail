@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MailContent } from './mail-content.model';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import * as io from 'socket.io-client';
+import {ToasterModule, ToasterService} from 'angular2-toaster';
+
 
 @Component({
   selector: 'app-mail-viewer',
@@ -13,9 +17,12 @@ export class MailViewerComponent implements OnInit {
   selectedEmail: MailContent;
   currentUserAddress: string;
   unReadEmailCount: number = 0;
+  private socket;
+  private toasterService: ToasterService;
 
-  constructor(private route: ActivatedRoute, private http: Http) {
+  constructor(private route: ActivatedRoute, private http: Http, toasterService: ToasterService) {
     route.params.subscribe(params => { this.currentUserAddress = params['email']; });
+    this.toasterService = toasterService;
     console.log('current email: ' + this.currentUserAddress);
 
     // mock data
@@ -80,7 +87,7 @@ export class MailViewerComponent implements OnInit {
   }
 
   updateMailReadStatus(status: boolean): void {
-    this.http.post('http://sharon.sealdoc.com:3000/mail/status/update',
+    this.http.post('http://localhost:3000/mail/status/update',
       {
         _id: this.selectedEmail._id,
         status: status
@@ -98,7 +105,26 @@ export class MailViewerComponent implements OnInit {
     this.updateMailReadStatus(false);
   }
 
+  getMessagesOnPush() {
+    let observable = new Observable(observer => {
+      this.socket = io('http://localhost:4000');
+      this.socket.on('new-message', (data) => {
+        observer.next(data);
+      });
+      return () => {
+        this.socket.disconnect();
+      };
+    });
+
+    observable.subscribe(data => {
+      let mail:MailContent = (data as MailContent);
+      this.emailDescriptions.push(mail);
+      this.toasterService.pop('info', mail.sender, mail.subject);
+    });
+  }  
+
   ngOnInit() {
     this.initEmails();
+    this.getMessagesOnPush();
   }
 }

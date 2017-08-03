@@ -1,55 +1,55 @@
-    /* nav bar */
-	.navbar-default{
-		background-color: #353538;
-    	border-color: #353538;
-	}
+/* nav bar */
+.navbar-default{
+	background-color: #353538;
+	border-color: #353538;
+}
 
-	.navbar-default .navbar-brand{
-		color:#ecf0f1;
-	}
+.navbar-default .navbar-brand{
+	color:#ecf0f1;
+}
 
-	.navbar-default .glyphicon{
-		color:#ecf0f1;
-	}
+.navbar-default .glyphicon{
+	color:#ecf0f1;
+}
 
-	.navbar-default .inbox-unread-number{
-		color:#ecf0f1;
-	}
+.navbar-default .inbox-unread-number{
+	color:#ecf0f1;
+}
 
-	/* Main mail container */
-	.main-container{
-		display:flex;
-	}
+/* Main mail container */
+.main-container{
+	display:flex;
+}
 
-	.main-container div{		
-		padding:5px;		
-	}
+.main-container div{		
+	padding:5px;		
+}
 
-	/* left pane mail descriptions */
-	.mail-descriptions-container{		
-		flex:1;		
-	}
+/* left pane mail descriptions */
+.mail-descriptions-container{		
+	flex:1;		
+}
 
-    .main-container .email-item-unread{
-    	border-left: 6px solid #1b98f8;
-    }
+.main-container .email-item-unread{
+	border-left: 6px solid #1b98f8;
+}
 
-    /* separator container */
-    .separator-container{
-    	border-left:1px #ccc solid;
-    }
+/* separator container */
+.separator-container{
+	border-left:1px #ccc solid;
+}
 
-	/* right pane mail viewer */
-	.main-container .mail-viewer-container{
-		flex:3;
-		display:flex;
-		flex-direction:column;
+/* right pane mail viewer */
+.main-container .mail-viewer-container{
+	flex:3;
+	display:flex;
+	flex-direction:column;
 
-		border:0px;
-		padding:0px;
-	}
+	border:0px;
+	padding:0px;
+}
 
-	.email-content-header-container{
-		border-bottom:1px #ccc solid;
-		padding-left:0px;
-	}
+.email-content-header-container{
+	border-bottom:1px #ccc solid;
+	padding-left:0px;
+}
